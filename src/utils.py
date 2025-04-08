@@ -1,25 +1,30 @@
+from pybricks.tools import wait
 from config import *
 
 class Utils:
-    def __init__(self, robot):
+    def __init__(self, robot, pose):
         self.robot = robot
+        self.pose = pose
     
-    def straight(self, distance, speed=SPEED):
+    def straight(self, distance, speed=SPEED, target_angle=None):
         self.robot.base.reset()
-        target_angle = self.robot.gyro.angle()
         p, i, d, error, last_error, pid = [0, 0, 0, 0, 0, 0]
+
+        if target_angle is None:
+            target_angle = self.pose.angle
+        
 
         while abs(self.robot.base.distance()) < abs(distance):
             error = target_angle - self.robot.gyro.angle()
             
             # PID control
-            p = error * DRIVE_Kp
-            i += error * DRIVE_Ki
-            d = DRIVE_Kd * (error - last_error)
+            p = error * PID_DRIVE["kp"]
+            i += error * PID_DRIVE["ki"]
+            d = (error - last_error) * PID_DRIVE["kd"]
             last_error = error
             
             # Clamp integral
-            i = clamp(i, -DRIVE_I_MAX, DRIVE_I_MAX)
+            i = clamp(i, -PID_DRIVE["i_max"], PID_DRIVE["i_max"])
 
             pid = p + i + d
             #pid = self.clamp(pid, -100, 100)
@@ -29,6 +34,15 @@ class Utils:
     
     def turn(self, angle, speed=SPEED_TURN):
         pass
+
+    def follow_line(self, speed=SPEED):
+        pass
+    
+    def reset_gyro(self):
+        wait(250)
+        self.robot.gyro.reset_angle(0)
+        self.pose.reset_angle()
+        wait(250)
     
 ### Separate util functions ###
 

@@ -14,15 +14,19 @@ AXLE_TRACK = 100
 
 ############## SETTINGS ##############
 
-DRIVE_Kp = 5
-DRIVE_Ki = 0
-DRIVE_Kd = 0
-DRIVE_I_MAX = 100
+PID_DRIVE = {
+    "kp": 5,
+    "ki": 0,
+    "kd": 0,
+    "i_max": 100
+}
 
-TURN_Kp = 5
-TURN_Ki = 0
-TURN_Kd = 0
-TURN_I_MAX = 100
+PID_TURN = {
+    "kp": 5,
+    "ki": 0,
+    "kd": 0,
+    "i_max": 100
+}
 
 SPEED = 300
 SPEED_TURN = 200
