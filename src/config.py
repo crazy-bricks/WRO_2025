@@ -9,8 +9,8 @@ PORT_GYRO = Port.S1
 PORT_COLOR_LEFT = Port.S2
 PORT_COLOR_RIGHT = Port.S3
 
-WHEEL_DIAMETER = 56
-AXLE_TRACK = 100
+WHEEL_DIAMETER = 56  # mm
+AXLE_TRACK = 100     # mm TODO: edit this value
 
 ############## SETTINGS ##############
 
@@ -30,5 +30,7 @@ PID_TURN = {
 
 SPEED = 300
 SPEED_TURN = 200
+
+TURN_TOLERANCE = 2  # degrees
 
 DEBUG = True

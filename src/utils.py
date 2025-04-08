@@ -32,8 +32,16 @@ class Utils:
             self.robot.base.drive(100, pid)
         self.robot.base.stop()
     
-    def turn(self, angle, speed=SPEED_TURN):
-        pass
+    def turn(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE):
+        target_angle = self.pose.angle + angle
+        self.pose.set_angle(target_angle)
+
+        error = target_angle - self.robot.gyro.angle()
+
+        while abs(error) >= tolerance:
+            pass # TODO: implement turn
+        
+        self.robot.base.stop()
 
     def follow_line(self, speed=SPEED):
         pass
