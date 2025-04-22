@@ -1,7 +1,7 @@
 from pybricks.tools import wait, StopWatch
 from config import *
 
-class Utils:
+class Movement:
     def __init__(self, robot, pose):
         self.robot = robot
         self.pose = pose
@@ -70,19 +70,11 @@ class Utils:
         self.pose.set_angle(target_angle)
 
     def follow_line(self, speed=SPEED):
-        pass
+        left = self.robot.left_color.reflection()
+        right = self.robot.right_color.reflection()
     
     def reset_gyro(self):
         wait(250)
         self.robot.gyro.reset_angle(0)
         self.pose.reset_angle()
         wait(250)
-    
-### Separate util functions ###
-
-def clamp(value, min_value, max_value):
-    return max(min(value, max_value), min_value)
-
-def debug_log(*args):
-    if DEBUG:
-        print(*args)

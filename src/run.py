@@ -1,6 +1,6 @@
 from utils import debug_log
 from config import *
 
-def main_run(robot, utils):
-    utils.turn(-90)
-    utils.straight(700)
+def main_run(robot, mv):
+    mv.turn(-90)
+    mv.straight(700)
