@@ -5,7 +5,7 @@ class Pose:
         self.angle = angle
 
     def __str__(self):
-        return f"Pose(x={self.x}, y={self.y}, angle={self.angle})"
+        return "Pose(x={}, y={}, angle={})".format(self.x, self.y, self.angle)
     
     def set_angle(self, angle):
         self.angle = angle

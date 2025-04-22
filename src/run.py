@@ -1,6 +1,6 @@
-from utils import debug
+from utils import debug_log
 from config import *
 
 def main_run(robot, utils):
-    debug("No main run yet")
-    utils.straight(1000)
+    utils.turn(-90)
+    utils.straight(700)

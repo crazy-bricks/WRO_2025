@@ -1,4 +1,4 @@
-from pybricks.tools import wait
+from pybricks.tools import wait, StopWatch
 from config import *
 
 class Utils:
@@ -6,15 +6,18 @@ class Utils:
         self.robot = robot
         self.pose = pose
     
-    def straight(self, distance, speed=SPEED, target_angle=None):
+    def straight(self, distance, speed=SPEED, target_angle=None, timeout=None):
         self.robot.base.reset()
         p, i, d, error, last_error, pid = [0, 0, 0, 0, 0, 0]
 
         if target_angle is None:
             target_angle = self.pose.angle
-        
 
-        while abs(self.robot.base.distance()) < abs(distance):
+        direction = 1 if distance > 0 else -1
+
+        timer = StopWatch()
+
+        while abs(distance) > abs(self.robot.base.distance()):
             error = target_angle - self.robot.gyro.angle()
             
             # PID control
@@ -29,19 +32,42 @@ class Utils:
             pid = p + i + d
             #pid = self.clamp(pid, -100, 100)
 
-            self.robot.base.drive(100, pid)
+            self.robot.base.drive(direction * speed, pid)
+
+            if timeout is not None and timer.time() > timeout:
+                debug_log("Drive timeout reached")
+                break
         self.robot.base.stop()
     
-    def turn(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE):
+    def turn(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE, timeout=None):
+        p, i, d, last_error, pid = [0, 0, 0, 0, 0]
         target_angle = self.pose.angle + angle
-        self.pose.set_angle(target_angle)
-
         error = target_angle - self.robot.gyro.angle()
 
-        while abs(error) >= tolerance:
-            pass # TODO: implement turn
-        
+        timer = StopWatch()
+
+        while abs(error) > tolerance:
+            error = target_angle - self.robot.gyro.angle()
+            debug_log(error)
+
+            # PID control
+            p = error * PID_TURN["kp"]
+            i += error * PID_TURN["ki"]
+            d = (error - last_error) * PID_TURN["kd"]
+            last_error = error
+
+            # Clamp integral
+            i = clamp(i, -PID_TURN["i_max"], PID_TURN["i_max"])
+            
+            pid = p + i + d
+
+            self.robot.base.drive(0, pid)
+
+            if timeout is not None and timer.time() > timeout:
+                debug_log("Turn timeout reached")
+                break
         self.robot.base.stop()
+        self.pose.set_angle(target_angle)
 
     def follow_line(self, speed=SPEED):
         pass

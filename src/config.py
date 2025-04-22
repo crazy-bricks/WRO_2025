@@ -9,8 +9,10 @@ PORT_GYRO = Port.S1
 PORT_COLOR_LEFT = Port.S2
 PORT_COLOR_RIGHT = Port.S3
 
-WHEEL_DIAMETER = 56  # mm
-AXLE_TRACK = 100     # mm TODO: edit this value
+
+# TODO: change testing values
+WHEEL_DIAMETER = 37  # mm
+AXLE_TRACK = 120     # mm
 
 ############## SETTINGS ##############
 
