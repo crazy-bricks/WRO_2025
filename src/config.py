@@ -17,7 +17,7 @@ AXLE_TRACK = 120     # mm
 ############## SETTINGS ##############
 
 PID_DRIVE = {
-    "kp": 5,
+    "kp": 10,
     "ki": 0,
     "kd": 0,
     "i_max": 100
@@ -25,9 +25,13 @@ PID_DRIVE = {
 
 PID_TURN = {
     "kp": 5,
-    "ki": 0,
-    "kd": 0,
+    "ki": 0.2,
+    "kd": 1,
     "i_max": 100
+}
+
+PID_COLOR = {
+    "kp": 1
 }
 
 SPEED = 300

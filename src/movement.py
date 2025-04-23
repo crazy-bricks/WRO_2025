@@ -1,5 +1,6 @@
 from pybricks.tools import wait, StopWatch
 from config import *
+from helper import clamp, debug_log
 
 class Movement:
     def __init__(self, robot, pose):
@@ -8,7 +9,6 @@ class Movement:
     
     def straight(self, distance, speed=SPEED, target_angle=None, timeout=None):
         self.robot.base.reset()
-        p, i, d, error, last_error, pid = [0, 0, 0, 0, 0, 0]
 
         if target_angle is None:
             target_angle = self.pose.angle
@@ -29,10 +29,10 @@ class Movement:
             # Clamp integral
             i = clamp(i, -PID_DRIVE["i_max"], PID_DRIVE["i_max"])
 
-            pid = p + i + d
-            #pid = self.clamp(pid, -100, 100)
+            correction = p + i + d
+            #correction = clamp(correction, -100, 100)
 
-            self.robot.base.drive(direction * speed, pid)
+            self.robot.base.drive(direction * speed, correction)
 
             if timeout is not None and timer.time() > timeout:
                 debug_log("Drive timeout reached")
@@ -40,7 +40,6 @@ class Movement:
         self.robot.base.stop()
     
     def turn(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE, timeout=None):
-        p, i, d, last_error, pid = [0, 0, 0, 0, 0]
         target_angle = self.pose.angle + angle
         error = target_angle - self.robot.gyro.angle()
 
@@ -59,9 +58,9 @@ class Movement:
             # Clamp integral
             i = clamp(i, -PID_TURN["i_max"], PID_TURN["i_max"])
             
-            pid = p + i + d
+            correction = p + i + d
 
-            self.robot.base.drive(0, pid)
+            self.robot.base.drive(0, correction)
 
             if timeout is not None and timer.time() > timeout:
                 debug_log("Turn timeout reached")
@@ -69,9 +68,16 @@ class Movement:
         self.robot.base.stop()
         self.pose.set_angle(target_angle)
 
-    def follow_line(self, speed=SPEED):
-        left = self.robot.left_color.reflection()
-        right = self.robot.right_color.reflection()
+    def follow_line(self, distance=100 speed=SPEED):
+        self.robot.base.reset()
+
+        while abs(self.robot.base.distance()) < distance:
+            left = self.robot.left_color.reflection()
+            right = self.robot.right_color.reflection()
+            error = left - right
+            correction = error * PID_COLOR["kp"]
+            self.robot.base.drive(speed, correction)
+        self.robot.base.stop()
     
     def reset_gyro(self):
         wait(250)
