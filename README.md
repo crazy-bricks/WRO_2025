@@ -15,3 +15,5 @@ src/
 models/               # 3d models of the robot
 docs/                 # robot documentation
 ```
+
+## How to run
