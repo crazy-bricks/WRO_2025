@@ -12,6 +12,7 @@ class Movement:
 
         if target_angle is None:
             target_angle = self.pose.angle
+        self.pose.set_angle(target_angle)
 
         direction = 1 if distance > 0 else -1
 
@@ -68,7 +69,7 @@ class Movement:
         self.robot.base.stop()
         self.pose.set_angle(target_angle)
 
-    def follow_line(self, distance=100 speed=SPEED):
+    def follow_line(self, distance=100, speed=SPEED):
         self.robot.base.reset()
 
         while abs(self.robot.base.distance()) < distance:
