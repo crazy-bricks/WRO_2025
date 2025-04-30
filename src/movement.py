@@ -8,6 +8,15 @@ class Movement:
         self.pose = pose
     
     def straight(self, distance, speed=SPEED, target_angle=None, timeout=None):
+        """
+        Drives the robot straight
+
+        :param distance: Distance to drive in mm
+        :param speed: Speed to drive at in mm/s
+        :param target_angle: Angle to drive at in degrees
+        :param timeout: Timeout in miliseconds
+        :return: None
+        """
         self.robot.base.reset()
 
         if target_angle is None:
@@ -80,6 +89,15 @@ class Movement:
             self.robot.base.drive(speed, correction)
         self.robot.base.stop()
     
+    def until_color(self, color, speed=SPEED):
+        while True:
+            left = self.robot.left_color.color()
+            right = self.robot.right_color.color()
+            if left == color or right == color:
+                break
+            self.straight(100, speed)
+        self.robot.base.stop()
+
     def reset_gyro(self):
         wait(250)
         self.robot.gyro.reset_angle(0)
