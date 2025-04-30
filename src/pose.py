@@ -14,7 +14,6 @@ class Pose:
     def __str__(self):
         """
         Returns a string representation of the Pose object
-
         :return: String representation of the Pose object
         """
         return "Pose(x={}, y={}, angle={})".format(self.x, self.y, self.angle)
@@ -29,7 +28,7 @@ class Pose:
     def set_coordinates(self, x, y):
         """
         Sets the coordinates of the Pose object
-        
+
         :param x: X coordinate in mm
         :param y: Y coordinate in mm
         """
