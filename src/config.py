@@ -34,7 +34,7 @@ PID_COLOR = {
 }
 
 SPEED = 300         # mm/s
-SPEED_TURN = 200    # mm/s
+SPEED_TURN = 200    # deg/s
 SPEED_LINE = 200    # mm/s
 
 TURN_TOLERANCE = 2  # degrees

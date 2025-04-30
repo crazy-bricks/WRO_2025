@@ -4,6 +4,11 @@ from helper import clamp, debug_log
 
 class Movement:
     def __init__(self, robot, pose):
+        """
+        Initializes the Movement class
+        :param robot: Robot object
+        :param pose: Pose object
+        """
         self.robot = robot
         self.pose = pose
     
@@ -50,6 +55,15 @@ class Movement:
         self.robot.base.stop()
     
     def turn(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE, timeout=None):
+        """
+        Turns the robot by a given angle
+        
+        :param angle: Angle to turn in degrees
+        :param speed: Speed to turn at in deg/s
+        :param tolerance: Turn tolerance in degrees
+        :param timeout: Timeout in milliseconds
+        :return: None
+        """
         target_angle = self.pose.angle + angle
         error = target_angle - self.robot.gyro.angle()
 
@@ -79,6 +93,13 @@ class Movement:
         self.pose.set_angle(target_angle)
 
     def follow_line(self, distance=100, speed=SPEED):
+        """
+        Drive a set distance while following a line
+
+        :param distance: Distance to drive in mm
+        :param speed: Speed to drive at in mm/s
+        :return: None
+        """
         self.robot.base.reset()
 
         while abs(self.robot.base.distance()) < distance:
@@ -90,6 +111,13 @@ class Movement:
         self.robot.base.stop()
     
     def until_color(self, color, speed=SPEED):
+        """
+        Drive until a color is detected
+        
+        :param color: Color to detect
+        :param speed: Speed to drive at in mm/s
+        :return: None
+        """
         while True:
             left = self.robot.left_color.color()
             right = self.robot.right_color.color()
@@ -99,6 +127,10 @@ class Movement:
         self.robot.base.stop()
 
     def reset_gyro(self):
+        """
+        Resets the gyro angle and the pose angle
+        :return: None
+        """
         wait(250)
         self.robot.gyro.reset_angle(0)
         self.pose.reset_angle()

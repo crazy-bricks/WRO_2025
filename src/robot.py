@@ -6,6 +6,9 @@ from config import *
 
 class Robot:
     def __init__(self):
+        """
+        Initializes the Robot class
+        """
         self.hub = EV3Brick()
         self.right_motor = Motor(PORT_RIGHT_MOTOR)
         self.left_motor = Motor(PORT_LEFT_MOTOR)
