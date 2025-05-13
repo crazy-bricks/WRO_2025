@@ -14,6 +14,7 @@ class Pose:
     def __str__(self):
         """
         Returns a string representation of the Pose object
+        
         :return: String representation of the Pose object
         """
         return "Pose(x={}, y={}, angle={})".format(self.x, self.y, self.angle)
@@ -21,6 +22,7 @@ class Pose:
     def set_angle(self, angle):
         """
         Sets the angle of the Pose object
+
         :param angle: Angle in degrees
         """
         self.angle = angle

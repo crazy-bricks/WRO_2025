@@ -6,6 +6,7 @@ class Movement:
     def __init__(self, robot, pose):
         """
         Initializes the Movement class
+
         :param robot: Robot object
         :param pose: Pose object
         """
@@ -34,7 +35,7 @@ class Movement:
         timer = StopWatch()
 
         while abs(distance) > abs(self.robot.base.distance()):
-            error = target_angle - self.robot.gyro.angle()
+            error = self.robot.gyro.angle() - target_angle
             
             # PID control
             p = error * PID_DRIVE["kp"]
@@ -135,10 +136,14 @@ class Movement:
         :return: None
         """
         target_angle = self.pose.angle + angle
+        self.pose.set_angle(target_angle)
         error = target_angle - self.robot.gyro.angle()
+        self.robot.base.turn(error)
+        return
+        p, i, d, correction, error, last_error = [0] * 6
 
         timer = StopWatch()
-        i = 0
+
         last_error = 0
 
         while abs(error) > tolerance:
@@ -156,7 +161,13 @@ class Movement:
             
             correction = p + i + d
 
-            self.robot.base.drive(0, correction)
+            settings = self.robot.base.settings()
+            settings["turn_rate"] = speed
+            settings["turn_acceleration"] = correction
+            self.robot.base.settings(settings)
+
+            self.robot.base.turn(correction)
+            # self.robot.base.drive(0, correction)
 
             if timeout is not None and timer.time() > timeout:
                 debug_log("Turn timeout reached")

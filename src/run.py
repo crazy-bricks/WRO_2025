@@ -1,4 +1,5 @@
 from pybricks.parameters import Color
+
 from helper import debug_log
 from config import *
 
