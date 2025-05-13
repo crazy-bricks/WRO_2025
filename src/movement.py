@@ -68,7 +68,8 @@ class Movement:
         error = target_angle - self.robot.gyro.angle()
 
         timer = StopWatch()
-        i: int = 0
+        i = 0
+        last_error = 0
 
         while abs(error) > tolerance:
             error = target_angle - self.robot.gyro.angle()
