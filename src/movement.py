@@ -47,6 +47,8 @@ class Movement:
             correction = p + i + d
             #correction = clamp(correction, -100, 100)
 
+            debug_log("error", error, "correction", correction, "p", p, "i", i, "d", d)
+
             self.robot.base.drive(direction * speed, correction)
 
             if timeout is not None and timer.time() > timeout:
@@ -54,6 +56,73 @@ class Movement:
                 break
         self.robot.base.stop()
     
+    def straight_ramp(self, distance, min_speed=SPEED_SLOW, max_speed=SPEED,  target_angle=None, timeout=None):
+        """
+        Drives the robot straight with acceleration and deceleration
+        
+        :param distance: Distance to drive in mm
+        :param min_speed: Minimum speed to drive at in mm/s
+        :param max_speed: Maximum speed to drive at in mm/s
+        :param target_angle: Angle to drive at in degrees
+        :param timeout: Timeout in miliseconds
+        :return: None
+        """
+        if min_speed > max_speed:
+            return
+
+        self.robot.base.reset()
+        p, i, d, correction, error, last_error = [0] * 6
+
+        if target_angle is None:
+            target_angle = self.pose.angle
+        self.pose.set_angle(target_angle)
+
+        direction = 1 if distance > 0 else -1
+
+        timer = StopWatch()
+
+        accel_thresh = 0.2 * abs(distance) # accel -> coast
+        decel_thresh = 0.2 * abs(distance) # coast -> decel
+        speed = min_speed
+
+        while abs(distance) > abs(self.robot.base.distance()):
+            error = target_angle - self.robot.gyro.angle()
+            
+            ### PID control ###
+            p = error * PID_DRIVE["kp"]
+            i += error * PID_DRIVE["ki"]
+            d = (error - last_error) * PID_DRIVE["kd"]
+            last_error = error
+            
+            # Clamp integral
+            i = clamp(i, -PID_DRIVE["i_max"], PID_DRIVE["i_max"])
+
+            correction = p + i + d
+            #correction = clamp(correction, -100, 100)
+
+            debug_log("error", error, "correction", correction, "p", p, "i", i, "d", d)
+
+            ### Speed ramping ###
+            acceleration = (max_speed - min_speed) / (accel_thresh)
+            deceleration = (min_speed - max_speed) / (distance - decel_thresh)
+
+            if abs(self.robot.base.distance()) < accel_thresh:
+                # accelerate
+                speed = min_speed + acceleration * abs(self.robot.base.distance())
+            elif abs(self.robot.base.distance()) > decel_thresh:
+                # decelerate
+                speed = max_speed + deceleration * (abs(self.robot.base.distance()) - decel_thresh)
+            else:
+                # coast
+                speed = max_speed
+
+            self.robot.base.drive(direction * speed, correction)
+
+            if timeout is not None and timer.time() > timeout:
+                debug_log("Drive timeout reached")
+                break
+        self.robot.base.stop()
+
     def turn(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE, timeout=None):
         """
         Turns the robot by a given angle

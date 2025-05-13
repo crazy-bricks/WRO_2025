@@ -13,7 +13,7 @@ PORT_COLOR_RIGHT = Port.S3
 WHEEL_DIAMETER = 56 # mm
 AXLE_TRACK = 96     # mm
 
-############## SETTINGS ##############
+############## PID ##############
 
 PID_DRIVE = {
     "kp": 10,
@@ -33,9 +33,13 @@ PID_COLOR = {
     "kp": 1
 }
 
+
+
 SPEED = 300         # mm/s
-SPEED_TURN = 200    # deg/s
+SPEED_SLOW = 100    # mm/s
 SPEED_LINE = 200    # mm/s
+
+SPEED_TURN = 200    # deg/s
 
 TURN_TOLERANCE = 2  # degrees
 
