@@ -23,6 +23,7 @@ class Movement:
         :return: None
         """
         self.robot.base.reset()
+        p, i, d, correction, error, last_error = [0] * 6
 
         if target_angle is None:
             target_angle = self.pose.angle
