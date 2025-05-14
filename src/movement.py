@@ -1,8 +1,11 @@
 from pybricks.tools import wait, StopWatch
 from config import *
 from helper import clamp, debug_log
+from pid import PID_Controller
 
 class Movement:
+    """A class for handling robot movement"""
+
     def __init__(self, robot, pose):
         """
         Initializes the Movement class
@@ -24,7 +27,6 @@ class Movement:
         :return: None
         """
         self.robot.base.reset()
-        p, i, d, correction, error, last_error = [0] * 6
 
         if target_angle is None:
             target_angle = self.pose.angle
@@ -34,22 +36,11 @@ class Movement:
 
         timer = StopWatch()
 
+        controller = PID_Controller(PID_DRIVE, target_angle)
+
         while abs(distance) > abs(self.robot.base.distance()):
-            error = self.robot.gyro.angle() - target_angle
-            
-            # PID control
-            p = error * PID_DRIVE["kp"]
-            i += error * PID_DRIVE["ki"]
-            d = (error - last_error) * PID_DRIVE["kd"]
-            last_error = error
-            
-            # Clamp integral
-            i = clamp(i, -PID_DRIVE["i_max"], PID_DRIVE["i_max"])
-
-            correction = p + i + d
-            #correction = clamp(correction, -100, 100)
-
-            debug_log("error", error, "correction", correction, "p", p, "i", i, "d", d)
+            # Get correction from PID
+            correction = controller.update(self.robot.gyro.angle())
 
             self.robot.base.drive(direction * speed, correction)
 
@@ -73,7 +64,6 @@ class Movement:
             return
 
         self.robot.base.reset()
-        p, i, d, correction, error, last_error = [0] * 6
 
         if target_angle is None:
             target_angle = self.pose.angle
@@ -83,26 +73,15 @@ class Movement:
 
         timer = StopWatch()
 
+        controller = PID_Controller(PID_DRIVE, target_angle)
+
         accel_thresh = 0.2 * abs(distance) # accel -> coast
         decel_thresh = 0.2 * abs(distance) # coast -> decel
         speed = min_speed
 
         while abs(distance) > abs(self.robot.base.distance()):
-            error = target_angle - self.robot.gyro.angle()
-            
-            ### PID control ###
-            p = error * PID_DRIVE["kp"]
-            i += error * PID_DRIVE["ki"]
-            d = (error - last_error) * PID_DRIVE["kd"]
-            last_error = error
-            
-            # Clamp integral
-            i = clamp(i, -PID_DRIVE["i_max"], PID_DRIVE["i_max"])
-
-            correction = p + i + d
-            #correction = clamp(correction, -100, 100)
-
-            debug_log("error", error, "correction", correction, "p", p, "i", i, "d", d)
+            # Get correction from PID
+            correction = controller.update(self.robot.gyro.angle())
 
             ### Speed ramping ###
             acceleration = (max_speed - min_speed) / (accel_thresh)

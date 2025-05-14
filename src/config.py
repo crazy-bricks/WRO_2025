@@ -19,14 +19,16 @@ PID_DRIVE = {
     "kp": 6,
     "ki": 0,
     "kd": 2,
-    "i_max": 100
+    "i_max": 100,
+    "output_max": None
 }
 
 PID_TURN = {
     "kp": 5,
     "ki": 0.2,
     "kd": 1,
-    "i_max": 100
+    "i_max": 100,
+    "output_max": None
 }
 
 PID_COLOR = {

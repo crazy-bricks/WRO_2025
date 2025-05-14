@@ -1,4 +1,5 @@
 class Pose:
+    """A class for keeping track of the robot's position and orientation"""
     def __init__(self, x, y, angle):
         """
         Initializes the Pose class
