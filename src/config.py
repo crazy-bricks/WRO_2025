@@ -35,14 +35,11 @@ PID_COLOR = {
     "kp": 1
 }
 
-
-
 SPEED = 300         # mm/s
 SPEED_SLOW = 100    # mm/s
 SPEED_LINE = 200    # mm/s
 
 SPEED_TURN = 200    # deg/s
-
 TURN_TOLERANCE = 2  # degrees
 
 DEBUG = True
