@@ -7,7 +7,8 @@ src/
   ├── config.py       # constants & config
   ├── helper.py       # misc helper functions
   ├── main.py         # program startup
-  ├── movement.py     # robot movement implementation
+  ├── movement.py     # handles robot movement
+  ├── pid.py          # pid control implementation
   ├── pose.py         # current position & angle
   ├── robot.py        # hardware abstraction
   └── run.py          # main robot run code
