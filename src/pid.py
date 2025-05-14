@@ -57,16 +57,8 @@ class PID_Controller:
         self.integral = 0
         self.derivative = 0
         self.last_error = 0
-
-    def set_setpoint(self, setpoint):
-        """
-        Sets a new setpoint for the PID controller.
-        
-        :param setpoint: The new setpoint value
-        :return: None
-        """
-        self.setpoint = setpoint
     
+    @property
     def tunings(self):
         """
         Returns the current PID tunings.
@@ -81,7 +73,8 @@ class PID_Controller:
             "output_max": self.output_max
         }
     
-    def set_tunings(self, tunings):
+    @tunings.setter
+    def tunings(self, tunings):
         """
         Sets new tunings for the PID controller.
         
@@ -94,3 +87,35 @@ class PID_Controller:
         self.i_max = tunings.get("i_max", self.i_max)
         self.output_max = tunings.get("output_max", self.output_max)
         self.reset()
+    
+    @property
+    def setpoint(self):
+        """
+        Returns the current setpoint of the PID controller.
+        
+        :return: The current setpoint value
+        """
+        return self._setpoint
+    
+    @setpoint.setter
+    def setpoint(self, setpoint):
+        """
+        Sets a new setpoint for the PID controller.
+        
+        :param setpoint: The new setpoint value
+        :return: None
+        """
+        self._setpoint = setpoint
+    
+    @property
+    def components(self):
+        """
+        Returns the current PID components.
+        
+        :return: A dictionary containing the current PID components
+        """
+        return {
+            "proportional": self.proportional,
+            "integral": self.integral,
+            "derivative": self.derivative
+        }

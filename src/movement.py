@@ -30,7 +30,8 @@ class Movement:
 
         if target_angle is None:
             target_angle = self.pose.angle()
-        self.pose.set_angle(target_angle)
+        else:
+            self.pose.set_angle(target_angle)
 
         direction = 1 if distance > 0 else -1
 
@@ -78,7 +79,8 @@ class Movement:
 
         if target_angle is None:
             target_angle = self.pose.angle()
-        self.pose.set_angle(target_angle)
+        else:
+            self.pose.set_angle(target_angle)
 
         direction = 1 if distance > 0 else -1
 
@@ -125,7 +127,7 @@ class Movement:
         :param timeout: Timeout in milliseconds
         :return: None
         """
-        target_angle = self.pose.angle + angle
+        target_angle = self.pose.angle() + angle
         self.pose.set_angle(target_angle)
         error = target_angle - self.robot.gyro.angle()
         self.robot.base.turn(error)
