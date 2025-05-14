@@ -16,6 +16,7 @@ def debug_log(*args, name="default"):
     Logs information if in debug mode.
 
     :param args: Arguments to log
+    :param name: Name of the logger
     :return: None
     """
     if DEBUG:

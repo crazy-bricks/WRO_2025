@@ -45,17 +45,28 @@ class Movement:
             self.robot.base.drive(direction * speed, correction)
 
             if timeout is not None and timer.time() > timeout:
-                debug_log("Drive timeout reached")
+                debug_log("Drive timeout reached", name="timeout")
                 break
         self.robot.base.stop()
     
-    def straight_ramp(self, distance, min_speed=SPEED_SLOW, max_speed=SPEED,  target_angle=None, timeout=None):
+    def straight_ramp(
+            self,
+            distance,
+            min_speed=SPEED_SLOW,
+            max_speed=SPEED,
+            accel_ratio=ACCEL_RATIO,
+            decel_ratio=DECEL_RATIO,
+            target_angle=None,
+            timeout=None
+        ):
         """
         Drives the robot straight with acceleration and deceleration
         
         :param distance: Distance to drive in mm
         :param min_speed: Minimum speed to drive at in mm/s
         :param max_speed: Maximum speed to drive at in mm/s
+        :param accel_ratio: Ratio of distance to accelerate over
+        :param decel_ratio: Ratio of distance to decelerate over
         :param target_angle: Angle to drive at in degrees
         :param timeout: Timeout in miliseconds
         :return: None
@@ -75,9 +86,9 @@ class Movement:
 
         controller = PID_Controller(PID_DRIVE, target_angle)
 
-        accel_thresh = 0.2 * abs(distance) # accel -> coast
-        decel_thresh = 0.2 * abs(distance) # coast -> decel
-        speed = min_speed
+        accel_thresh = accel_ratio * abs(distance) # accel -> coast
+        decel_thresh = decel_ratio * abs(distance) # coast -> decel
+        current_speed = min_speed
 
         while abs(distance) > abs(self.robot.base.distance()):
             # Get correction from PID
@@ -89,18 +100,18 @@ class Movement:
 
             if abs(self.robot.base.distance()) < accel_thresh:
                 # accelerate
-                speed = min_speed + acceleration * abs(self.robot.base.distance())
+                current_speed = min_speed + acceleration * abs(self.robot.base.distance())
             elif abs(self.robot.base.distance()) > decel_thresh:
                 # decelerate
-                speed = max_speed + deceleration * (abs(self.robot.base.distance()) - decel_thresh)
+                current_speed = max_speed + deceleration * (abs(self.robot.base.distance()) - decel_thresh)
             else:
                 # coast
-                speed = max_speed
+                current_speed = max_speed
 
-            self.robot.base.drive(direction * speed, correction)
+            self.robot.base.drive(direction * current_speed, correction)
 
             if timeout is not None and timer.time() > timeout:
-                debug_log("Drive timeout reached")
+                debug_log("Drive timeout reached", name="timeout")
                 break
         self.robot.base.stop()
 
