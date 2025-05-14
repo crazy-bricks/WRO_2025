@@ -19,6 +19,14 @@ class Pose:
         :return: String representation of the Pose object
         """
         return "Pose(x={}, y={}, angle={})".format(self.x, self.y, self.angle)
+#
+    def angle(self):
+        """
+        Returns the angle of the Pose object
+
+        :return: Angle in degrees
+        """
+        return self.angle
     
     def set_angle(self, angle):
         """
@@ -27,6 +35,14 @@ class Pose:
         :param angle: Angle in degrees
         """
         self.angle = angle
+    
+    def coordinates(self):
+        """
+        Returns the coordinates of the Pose object
+
+        :return: Tuple of (x, y) coordinates in mm
+        """
+        return self.x, self.y
     
     def set_coordinates(self, x, y):
         """

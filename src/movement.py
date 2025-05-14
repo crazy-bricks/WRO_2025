@@ -29,7 +29,7 @@ class Movement:
         self.robot.base.reset()
 
         if target_angle is None:
-            target_angle = self.pose.angle
+            target_angle = self.pose.angle()
         self.pose.set_angle(target_angle)
 
         direction = 1 if distance > 0 else -1
@@ -77,7 +77,7 @@ class Movement:
         self.robot.base.reset()
 
         if target_angle is None:
-            target_angle = self.pose.angle
+            target_angle = self.pose.angle()
         self.pose.set_angle(target_angle)
 
         direction = 1 if distance > 0 else -1
