@@ -210,3 +210,48 @@ class Movement:
         self.robot.gyro.reset_angle(0)
         self.pose.reset_angle()
         wait(250)
+    
+    def rotate_arm(self, steps, speed=SPEED_TURN):
+        """
+        Rotates the arm motor by a given number of steps, each step is 90 degrees
+
+        :param steps: Number of steps to rotate
+        :param speed: Speed to rotate at in deg/s
+        :return: None
+        """
+        angle = -90 * steps
+        self.robot.arm_motor.run_target(speed, angle)
+    
+    def move_arm(self, pos="", speed=SPEED_TURN):
+        """
+        Moves the arm to a given position
+
+        :param pos: Position to move to, "up", "mid", or "down"
+        :param speed: Speed to move at in deg/s
+        :return: None
+        """
+        if pos not in ARM_POSITION:
+            debug_log("Invalid arm position: {}".format(pos), name="arm")
+            return
+        
+        self.robot.front_motor.run_target(speed, ARM_POSITION[pos])
+
+"""
+    def block_collect(self, pos="", speed=SPEED_TURN):
+        Collects a block by moving the lock down and then up
+
+        :param pos: Position to move the lock, "up", or "down"
+        :param speed: Speed to move at in deg/s
+        :return: None
+        direction = 1 if pos == "up" else -1
+
+        if self.robot.front_motor.angle() > -800 and direction == 1:
+            debug_log("Lock unable to go up", name="block")
+            return
+        
+        if self.robot.front_motor.angle() < -1400 and direction == -1:
+            debug_log("Lock unable to go down", name="block")
+            return
+
+        self.robot.front_motor.run_target(speed, 800 * direction)
+"""

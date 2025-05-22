@@ -3,17 +3,25 @@ from pybricks.parameters import Port
 
 ############## ROBOT ##############
 
-PORT_RIGHT_MOTOR = Port.C
+PORT_RIGHT_MOTOR = Port.A
 PORT_LEFT_MOTOR = Port.B
-PORT_FRONT_MOTOR = Port.A
+PORT_FRONT_MOTOR = Port.C
+PORT_ARM_MOTOR = Port.D
 PORT_GYRO = Port.S1
 PORT_COLOR_LEFT = Port.S2
 PORT_COLOR_RIGHT = Port.S3
+PORT_COLOR_SIDE = Port.S4
 
-WHEEL_DIAMETER = 56 # mm
-AXLE_TRACK = 96     # mm
+WHEEL_DIAMETER = 62.4 # mm
+AXLE_TRACK = 168     # mm
 
-############## PID ##############
+ARM_POSITION = {
+    "up": 0,
+    "mid": -1060,
+    "down": -2120
+}
+
+##############  PID  ##############
 
 PID_DRIVE = {
     "kp": 6,
