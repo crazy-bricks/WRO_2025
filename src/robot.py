@@ -16,5 +16,6 @@ class Robot:
         self.arm_motor = Motor(PORT_ARM_MOTOR)
         self.front_motor = Motor(PORT_FRONT_MOTOR)
         self.gyro = GyroSensor(PORT_GYRO)
-        # self.left_color = ColorSensor(PORT_COLOR_LEFT)
-        # self.right_color = ColorSensor(PORT_COLOR_RIGHT)
+        self.left_color = ColorSensor(PORT_COLOR_LEFT)
+        self.right_color = ColorSensor(PORT_COLOR_RIGHT)
+        self.side_color = ColorSensor(PORT_COLOR_SIDE)

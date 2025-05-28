@@ -9,6 +9,10 @@ def main_run(robot, mv):
     robot.base.reset()
     mv.move_arm(pos="mid")
 
+    mv.turn(80)
+    mv.straight(distance=1000)
+    mv.straight(distance=1000, target_angle=90)
+
     return
     while True:
         pressed = robot.hub.buttons.pressed()

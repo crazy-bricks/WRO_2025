@@ -3,10 +3,11 @@ from pybricks.parameters import Port
 
 ############## ROBOT ##############
 
-PORT_RIGHT_MOTOR = Port.A
-PORT_LEFT_MOTOR = Port.B
-PORT_FRONT_MOTOR = Port.C
+PORT_RIGHT_MOTOR = Port.B
+PORT_LEFT_MOTOR = Port.C
+PORT_FRONT_MOTOR = Port.A
 PORT_ARM_MOTOR = Port.D
+
 PORT_GYRO = Port.S1
 PORT_COLOR_LEFT = Port.S2
 PORT_COLOR_RIGHT = Port.S3
@@ -47,7 +48,7 @@ SPEED = 300         # mm/s
 SPEED_SLOW = 100    # mm/s
 SPEED_LINE = 200    # mm/s
 
-SPEED_TURN = 200    # deg/s
+SPEED_TURN = 500    # deg/s
 TURN_TOLERANCE = 2  # degrees
 
 ACCEL_RATIO = 0.2
