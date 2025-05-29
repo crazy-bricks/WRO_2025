@@ -1,17 +1,49 @@
 from pybricks.parameters import Color, Button
+from pybricks.tools import wait
 
 from helper import debug_log
 from config import *
 
 def main_run(robot, mv):
+    if not DEBUG:
+        while robot.hub.buttons.pressed() is []:
+            pass
+
     robot.front_motor.reset_angle(0)
     robot.arm_motor.reset_angle(0)
     robot.base.reset()
-    mv.move_arm(pos="mid")
 
-    mv.turn(80)
-    mv.straight(distance=1000)
-    mv.straight(distance=1000, target_angle=90)
+    mv.turn(45)
+    mv.straight(365)
+    mv.turn(45)
+    mv.straight(900)
+    mv.turn(45)
+    mv.straight(200)
+    mv.turn(-45)
+    mv.straight(380)
+    mv.move_arm(pos="down")
+    mv.turn(-90)
+    mv.straight(620)
+    mv.turn(45)
+    mv.straight(100)
+    mv.move_arm(pos="up")
+    mv.straight(-200)
+    mv.turn(-45)
+    mv.straight(-230)
+    mv.turn(-90)
+    mv.straight(320)
+    mv.turn(90)
+    mv.move_arm(pos="down")
+    mv.straight(-130)
+    mv.move_arm(pos="up")
+    mv.arm_up()
+    mv.turn(-45)
+    mv.straight(220)
+
+
+
+    return
+
 
     return
     while True:

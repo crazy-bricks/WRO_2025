@@ -27,9 +27,11 @@ class Movement:
         :return: None
         """
         self.robot.base.reset()
+        self.robot.base.straight(-distance)
+        return
 
         if target_angle is None:
-            target_angle = self.pose.angle()
+            target_angle = self.pose.angle
         else:
             self.pose.set_angle(target_angle)
 
@@ -78,7 +80,7 @@ class Movement:
         self.robot.base.reset()
 
         if target_angle is None:
-            target_angle = self.pose.angle()
+            target_angle = self.pose.angle
         else:
             self.pose.set_angle(target_angle)
 
@@ -127,10 +129,14 @@ class Movement:
         :param timeout: Timeout in milliseconds
         :return: None
         """
-        target_angle = self.pose.angle() + angle
-        self.pose.set_angle(target_angle)
+        target_angle = self.pose.angle - angle
+        self.pose.angle = target_angle
         error = target_angle - self.robot.gyro.angle()
-        self.robot.base.turn(error)
+
+        while abs(error) > tolerance:
+            debug_log("Error: {}, Current Angle {}".format(error, self.robot.gyro.angle()), name="turn")
+            error = self.robot.gyro.angle() - target_angle
+            self.robot.base.turn(error)
         return
         p, i, d, correction, error, last_error = [0] * 6
 

@@ -13,13 +13,13 @@ PORT_COLOR_LEFT = Port.S2
 PORT_COLOR_RIGHT = Port.S3
 PORT_COLOR_SIDE = Port.S4
 
-WHEEL_DIAMETER = 62.4 # mm
+WHEEL_DIAMETER = 62 # mm
 AXLE_TRACK = 168     # mm
 
 ARM_POSITION = {
     "up": 0,
-    "mid": -1060,
-    "down": -2120
+    "mid": -1100,
+    "down": -2200
 }
 
 ##############  PID  ##############
@@ -48,8 +48,9 @@ SPEED = 300         # mm/s
 SPEED_SLOW = 100    # mm/s
 SPEED_LINE = 200    # mm/s
 
-SPEED_TURN = 500    # deg/s
-TURN_TOLERANCE = 2  # degrees
+SPEED_ARM = 1200    # deg/s
+SPEED_TURN = 600    # deg/s
+TURN_TOLERANCE = 0  # degrees
 
 ACCEL_RATIO = 0.2
 DECEL_RATIO = 0.2
