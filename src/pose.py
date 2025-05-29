@@ -30,13 +30,13 @@ class Pose:
         return self._angle
     
     @angle.setter
-    def set_angle(self, angle1):
+    def angle(self, angle):
         """
         Sets the angle of the Pose object
 
         :param angle: Angle in degrees
         """
-        self._angle = angle1
+        self._angle = angle
     
     @property
     def coordinates(self):
