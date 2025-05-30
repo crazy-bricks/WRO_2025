@@ -1,5 +1,7 @@
 # Team Crazy Bricks -- WRO 2025 senior code
 
+**Technical Summary** of the robot can be found [here](https://docs.google.com/document/d/1pVBspsxjEcowVbUPeQn3gzRPrZjSksW7rtvm_6QQHa8/edit?usp=sharing).
+
 ## Folder structure
 
 ```
