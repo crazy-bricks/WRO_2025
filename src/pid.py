@@ -18,11 +18,12 @@ class PID_Controller:
 
         self.setpoint = setpoint
 
-        self.proportional = 0
-        self.integral = 0
-        self.derivative = 0
+        self._proportional = 0
+        self._integral = 0
+        self._derivative = 0
 
-        self.last_error = 0
+        self._last_error = 0
+        self._error = 100000
     
     def update(self, input, dt=1):
         """
@@ -31,20 +32,21 @@ class PID_Controller:
         :param input: The current input value
         :return: The correction value
         """
-        error = self.setpoint - input
+        error = input - self.setpoint
 
-        self.proportional = error * self.kp * dt
-        self.integral += error * self.ki * dt
-        self.derivative = ((error - self.last_error) / dt) * self.kd if dt > 0 else 0
+        self._proportional = error * self.kp * dt
+        self._integral += error * self.ki * dt
+        self._derivative = ((error - self._last_error) / dt) * self.kd if dt > 0 else 0
 
         if self.i_max is not None:
-            self.integral = clamp(self.integral, -self.i_max, self.i_max)
+            self._integral = clamp(self._integral, -self.i_max, self.i_max)
 
-        correction = self.proportional + self.integral + self.derivative
+        correction = self._proportional + self._integral + self._derivative
         if self.output_max is not None:
             correction = clamp(correction, -self.output_max, self.output_max)
 
-        self.last_error = error
+        self._last_error = error
+        self._error = error
         return correction
     
     def reset(self):
@@ -53,10 +55,10 @@ class PID_Controller:
         
         :return: None
         """
-        self.proportional = 0
-        self.integral = 0
-        self.derivative = 0
-        self.last_error = 0
+        self._proportional = 0
+        self._integral = 0
+        self._derivative = 0
+        self._last_error = 0
     
     @property
     def tunings(self):
@@ -115,7 +117,26 @@ class PID_Controller:
         :return: A dictionary containing the current PID components
         """
         return {
-            "proportional": self.proportional,
-            "integral": self.integral,
-            "derivative": self.derivative
+            "proportional": self._proportional,
+            "integral": self._integral,
+            "derivative": self._derivative
         }
+    
+    @property
+    def error(self):
+        """
+        Returns the error value.
+        
+        :return: The last error value
+        """
+        return self._error
+    
+    @error.setter
+    def error(self, value):
+        """
+        Sets the error value.
+        
+        :param value: The new error value
+        :return: None
+        """
+        self._error = value

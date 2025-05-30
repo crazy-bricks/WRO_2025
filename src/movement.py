@@ -15,7 +15,7 @@ class Movement:
         """
         self.robot = robot
         self.pose = pose
-    
+
     def straight(self, distance, speed=SPEED, target_angle=None, timeout=None):
         """
         Drives the robot straight
@@ -27,15 +27,13 @@ class Movement:
         :return: None
         """
         self.robot.base.reset()
-        self.robot.base.straight(-distance)
-        return
 
         if target_angle is None:
             target_angle = self.pose.angle
         else:
             self.pose.set_angle(target_angle)
 
-        direction = 1 if distance > 0 else -1
+        direction = -1 if distance > 0 else 1
 
         timer = StopWatch()
 
@@ -45,12 +43,17 @@ class Movement:
             # Get correction from PID
             correction = controller.update(self.robot.gyro.angle())
 
+            debug_log("Distance: {}, Error: {}, Correction: {}".format(self.robot.base.distance(), controller._last_error, correction), name="drive")
+
             self.robot.base.drive(direction * speed, correction)
 
             if timeout is not None and timer.time() > timeout:
                 debug_log("Drive timeout reached", name="timeout")
                 break
         self.robot.base.stop()
+        self.robot.left_motor.hold()
+        self.robot.right_motor.hold()
+        wait(100)
     
     def straight_ramp(
             self,
@@ -131,49 +134,44 @@ class Movement:
         """
         target_angle = self.pose.angle - angle
         self.pose.angle = target_angle
-        error = target_angle - self.robot.gyro.angle()
-
-        while abs(error) > tolerance:
-            debug_log("Error: {}, Current Angle {}".format(error, self.robot.gyro.angle()), name="turn")
-            error = self.robot.gyro.angle() - target_angle
-            self.robot.base.turn(error)
-        return
-        p, i, d, correction, error, last_error = [0] * 6
+        self.robot.base.turn(angle)
+        self.robot.base.stop()
+        self.robot.left_motor.hold()
+        self.robot.right_motor.hold()
+    
+    def turn_pid(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE, timeout=None):
+        """
+        Turns the robot by a given angle
+        
+        :param angle: Angle to turn in degrees
+        :param speed: Speed to turn at in deg/s
+        :param tolerance: Turn tolerance in degrees
+        :param timeout: Timeout in milliseconds
+        :return: None
+        """
+        target_angle = self.pose.angle - angle
+        self.pose.angle = target_angle
+        controller = PID_Controller(PID_TURN, target_angle)
 
         timer = StopWatch()
 
-        last_error = 0
+        while abs(controller.error) > tolerance:
+            correction = controller.update(self.robot.gyro.angle())
+            debug_log("Error: {}, Current Angle: {}, Correction: {}".format(controller._last_error, self.robot.gyro.angle(), correction), name="turn_pid")
 
-        while abs(error) > tolerance:
-            error = target_angle - self.robot.gyro.angle()
-            debug_log(error)
-
-            # PID control
-            p = error * PID_TURN["kp"]
-            i += error * PID_TURN["ki"]
-            d = (error - last_error) * PID_TURN["kd"]
-            last_error = error
-
-            # Clamp integral
-            i = clamp(i, -PID_TURN["i_max"], PID_TURN["i_max"])
-            
-            correction = p + i + d
-
-            settings = self.robot.base.settings()
-            settings["turn_rate"] = speed
-            settings["turn_acceleration"] = correction
-            self.robot.base.settings(settings)
-
-            self.robot.base.turn(correction)
-            # self.robot.base.drive(0, correction)
+            self.robot.base.drive(0, correction)
 
             if timeout is not None and timer.time() > timeout:
                 debug_log("Turn timeout reached")
                 break
         self.robot.base.stop()
-        self.pose.set_angle(target_angle)
+        self.pose.angle = target_angle
+        self.robot.left_motor.hold()
+        self.robot.right_motor.hold()
+        self.robot.hub.speaker.beep()
+        wait(100)
 
-    def follow_line(self, distance=100, speed=SPEED):
+    def follow_line(self, distance=100, speed=SPEED_LINE):
         """
         Drive a set distance while following a line
 
@@ -188,10 +186,10 @@ class Movement:
             right = self.robot.right_color.reflection()
             error = left - right
             correction = error * PID_COLOR["kp"]
-            self.robot.base.drive(speed, correction)
+            self.robot.base.drive(speed, -correction)
         self.robot.base.stop()
     
-    def until_color(self, color, speed=SPEED):
+    def until_color(self, color, speed=SPEED_LINE):
         """
         Drive until a color is detected
         
@@ -199,12 +197,16 @@ class Movement:
         :param speed: Speed to drive at in mm/s
         :return: None
         """
+        controller = PID_Controller(PID_DRIVE, self.pose.angle)
+
         while True:
             left = self.robot.left_color.color()
             right = self.robot.right_color.color()
             if left == color or right == color:
                 break
-            self.straight(100, speed)
+
+            correction = controller.update(self.robot.gyro.angle())
+            self.robot.base.drive(speed, correction)
         self.robot.base.stop()
 
     def reset_gyro(self):
@@ -228,7 +230,7 @@ class Movement:
         angle = -90 * steps
         self.robot.arm_motor.run_target(speed, angle)
     
-    def move_arm(self, pos="", speed=SPEED_TURN):
+    def move_arm(self, pos="", speed=SPEED_ARM):
         """
         Moves the arm to a given position
 
@@ -241,23 +243,3 @@ class Movement:
             return
         
         self.robot.front_motor.run_target(speed, ARM_POSITION[pos])
-
-"""
-    def block_collect(self, pos="", speed=SPEED_TURN):
-        Collects a block by moving the lock down and then up
-
-        :param pos: Position to move the lock, "up", or "down"
-        :param speed: Speed to move at in deg/s
-        :return: None
-        direction = 1 if pos == "up" else -1
-
-        if self.robot.front_motor.angle() > -800 and direction == 1:
-            debug_log("Lock unable to go up", name="block")
-            return
-        
-        if self.robot.front_motor.angle() < -1400 and direction == -1:
-            debug_log("Lock unable to go down", name="block")
-            return
-
-        self.robot.front_motor.run_target(speed, 800 * direction)
-"""

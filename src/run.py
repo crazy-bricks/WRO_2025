@@ -1,18 +1,28 @@
 from pybricks.parameters import Color, Button
 from pybricks.tools import wait
 
+from movement import Movement
+from robot import Robot
+
 from helper import debug_log
 from config import *
 
-def main_run(robot, mv):
-    if not DEBUG:
-        while robot.hub.buttons.pressed() is []:
-            pass
+def main_run(robot: Robot, mv: Movement):
+    # while True:
+    #     pressed = robot.hub.buttons.pressed()
+    #     if Button.CENTER in pressed:
+    #         debug_log("button pressed, starting run", name="start")
+    #         break
 
     robot.front_motor.reset_angle(0)
     robot.arm_motor.reset_angle(0)
     robot.base.reset()
 
+    mv.turn(90)
+    # mv.straight(200)
+    wait(1000)
+
+    return
     mv.turn(45)
     mv.straight(365)
     mv.turn(45)

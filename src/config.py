@@ -1,7 +1,7 @@
 from pybricks.parameters import Port
 
 
-############## ROBOT ##############
+##############  ROBOT  ##############
 
 PORT_RIGHT_MOTOR = Port.B
 PORT_LEFT_MOTOR = Port.C
@@ -13,7 +13,7 @@ PORT_COLOR_LEFT = Port.S2
 PORT_COLOR_RIGHT = Port.S3
 PORT_COLOR_SIDE = Port.S4
 
-WHEEL_DIAMETER = 62 # mm
+WHEEL_DIAMETER = 62.4 # mm
 AXLE_TRACK = 168     # mm
 
 ARM_POSITION = {
@@ -25,24 +25,26 @@ ARM_POSITION = {
 ##############  PID  ##############
 
 PID_DRIVE = {
-    "kp": 6,
-    "ki": 0,
-    "kd": 2,
+    "kp": 4.5,
+    "ki": 0.01,
+    "kd": 0.01,
     "i_max": 100,
     "output_max": None
 }
 
 PID_TURN = {
-    "kp": 5,
-    "ki": 0.2,
-    "kd": 1,
+    "kp": 1,
+    "ki": 0,
+    "kd": 0,
     "i_max": 100,
-    "output_max": None
+    "output_max": 100
 }
 
 PID_COLOR = {
     "kp": 1
 }
+
+##############  MOVEMENT  ##############
 
 SPEED = 300         # mm/s
 SPEED_SLOW = 100    # mm/s
@@ -50,9 +52,12 @@ SPEED_LINE = 200    # mm/s
 
 SPEED_ARM = 1200    # deg/s
 SPEED_TURN = 600    # deg/s
-TURN_TOLERANCE = 0  # degrees
+
+TURN_TOLERANCE = 2  # degrees
 
 ACCEL_RATIO = 0.2
 DECEL_RATIO = 0.2
+
+##############  MISC  ##############
 
 DEBUG = True
