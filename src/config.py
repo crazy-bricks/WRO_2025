@@ -14,7 +14,7 @@ PORT_COLOR_RIGHT = Port.S3
 PORT_COLOR_SIDE = Port.S4
 
 WHEEL_DIAMETER = 62.4 # mm
-AXLE_TRACK = 168     # mm
+AXLE_TRACK = 166     # mm (168 og)
 
 ARM_POSITION = {
     "up": 0,
