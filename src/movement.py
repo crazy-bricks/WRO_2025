@@ -31,7 +31,7 @@ class Movement:
         if target_angle is None:
             target_angle = self.pose.angle
         else:
-            self.pose.set_angle(target_angle)
+            self.pose.angle = target_angle
 
         direction = -1 if distance > 0 else 1
 
@@ -132,12 +132,15 @@ class Movement:
         :param timeout: Timeout in milliseconds
         :return: None
         """
+        debug_log("{}".format(self.robot.gyro.angle()), name="gyro")
         target_angle = self.pose.angle - angle
         self.pose.angle = target_angle
         self.robot.base.turn(angle)
         self.robot.base.stop()
         self.robot.left_motor.hold()
         self.robot.right_motor.hold()
+        debug_log("{}".format(self.robot.gyro.angle()), name="gyro")
+        wait(500)
     
     def turn_pid(self, angle, speed=SPEED_TURN, tolerance=TURN_TOLERANCE, timeout=None):
         """
@@ -197,16 +200,12 @@ class Movement:
         :param speed: Speed to drive at in mm/s
         :return: None
         """
-        controller = PID_Controller(PID_DRIVE, self.pose.angle)
-
         while True:
             left = self.robot.left_color.color()
             right = self.robot.right_color.color()
             if left == color or right == color:
                 break
-
-            correction = controller.update(self.robot.gyro.angle())
-            self.robot.base.drive(speed, correction)
+            self.robot.base.drive(speed, 0)
         self.robot.base.stop()
 
     def reset_gyro(self):
@@ -227,6 +226,8 @@ class Movement:
         :param speed: Speed to rotate at in deg/s
         :return: None
         """
+        if steps == 0:
+            return
         angle = -90 * steps
         self.robot.arm_motor.run_target(speed, angle)
     

@@ -1,4 +1,4 @@
-from pybricks.parameters import Port
+from pybricks.parameters import Port, Color
 
 
 ##############  ROBOT  ##############
@@ -14,12 +14,19 @@ PORT_COLOR_RIGHT = Port.S3
 PORT_COLOR_SIDE = Port.S4
 
 WHEEL_DIAMETER = 62.4 # mm
-AXLE_TRACK = 166     # mm (168 og)
+AXLE_TRACK = 164     # mm (168 og)
 
 ARM_POSITION = {
     "up": 0,
     "mid": -1100,
     "down": -2200
+}
+
+PAYLOAD_ROTATION = {
+    Color.RED: 0,
+    Color.GREEN: 2,
+    Color.BLUE: -1,
+    Color.YELLOW: 1,
 }
 
 ##############  PID  ##############
